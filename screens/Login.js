@@ -1,14 +1,12 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Text, StyleSheet, View } from 'react-native'
 
-export default class Login extends Component {
-  render() {
+export default function Login() {
     return (
       <View>
-        <Text> textInComponent </Text>
+        <Text> Login </Text>
       </View>
     )
-  }
 }
 
 const styles = StyleSheet.create({})
