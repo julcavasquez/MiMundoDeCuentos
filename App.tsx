@@ -32,7 +32,7 @@ function App() {
   function MyStack() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name="Login Pag" component={Login} />
+        <Stack.Screen name="Login Pagina" component={Login} />
         <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     );
