@@ -1,7 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image,ScrollView } from 'react-native';
 
-
 const RegistroUsuario = ({navigation}) => {
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
@@ -12,7 +11,7 @@ const RegistroUsuario = ({navigation}) => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   // Consumir backend
   useEffect(() => {
-    fetch("https://71ba04c88db7.ngrok-free.app/api/avatars") // ⚠️ Cambiar localhost por IP de tu PC si usas dispositivo físico
+    fetch("https://15b8c1efe786.ngrok-free.app/api/avatars") // ⚠️ Cambiar localhost por IP de tu PC si usas dispositivo físico
       .then((res) => res.json())
       .then((data) => {
         console.log("Respuesta del backend:", data);
@@ -36,12 +35,14 @@ const RegistroUsuario = ({navigation}) => {
     }
 
     try {
-      const response = await fetch('https://71ba04c88db7.ngrok-free.app/api/usuarios', {
+      const response = await fetch('https://15b8c1efe786.ngrok-free.app/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+            nombres: nombres,
+            apellidos: apellidos,
             nom_usu: nom_usu,        // el valor de tu input nombre
-            pin: pin,              // el valor de tu input pin
+            pin: pin,             // el valor de tu input pin
             avatar: selectedAvatar // aquí va la URL del avatar seleccionado
       }),
       });

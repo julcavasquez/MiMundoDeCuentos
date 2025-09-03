@@ -1,10 +1,28 @@
-import React,{useState} from 'react';
+import React,{useEffect,useState,useContext } from 'react';
 import { ScrollView, Text, StyleSheet, View, Image, TextInput, Modal,
   TouchableWithoutFeedback,TouchableOpacity,ImageBackground,Dimensions } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import { AuthContext } from '../utils/AuthContext';
 export default function Home({ navigation }) {
     const [menuVisible, setMenuVisible] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { user,logout } = useContext(AuthContext);
+    console.log(user);
+    // Revisar si existe token en AsyncStorage
+    useEffect(() => {
+      const checkSession = async () => {      
+        setIsLoggedIn(!!user?.userId); // true si hay token
+      };
+      checkSession();
+    }, [menuVisible,user]); // cada vez que abra el menú revisa
+
+    const handleLogout = () => {
+    logout();
+    setMenuVisible(false);
+    navigation.replace("Home"); // 👈 Redirige al login
+  };
+
+  
      return (
     //Inicio del ScrollView 
       <ScrollView>
@@ -36,7 +54,23 @@ export default function Home({ navigation }) {
 
         {/* Dropdown flotante */}
         <View style={styles.dropdown}>
-          <TouchableOpacity
+           {isLoggedIn ? (
+            // 🔑 Menú si está logueado
+            <>
+              <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
+                <Text style={styles.option}>👤 Mi Perfil</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("MisCuentos")}>
+                <Text style={styles.option}>📚 Mis Cuentos</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleLogout}>
+                <Text style={styles.option}>🚪 Cerrar sesión</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            // 🚫 Menú si NO está logueado
+            <>
+               <TouchableOpacity
             style={styles.option}
             onPress={() => {
               setMenuVisible(false);
@@ -59,12 +93,15 @@ export default function Home({ navigation }) {
           <TouchableOpacity
             style={styles.option}
             onPress={() => {
-              setMenuVisible(false);
+              
               navigation.navigate("Ayuda");
             }}
           >
             <Text style={styles.optionText}>Acerca de</Text>
           </TouchableOpacity>
+            </>
+          )}
+          
         </View>
       </Modal>
                 </View>

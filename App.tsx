@@ -25,20 +25,24 @@ import Login from './screens/Login';
 import LoginPin from './screens/LoginPin';
 import Home from './screens/Home';
 import LoadingScreen from './screens/Loading';
+import LoadingPag from './screens/LoadingScreen';
 import CrearCuento from './screens/CrearCuento';
 import RegistroUsuario from './screens/RegistroUsuario';
-
+import { AuthProvider, AuthContext } from './utils/AuthContext';
 function App() {
 
   const Stack = createStackNavigator();
-
   function MyStack() {
     return (
       <Stack.Navigator
           screenOptions={{headerShown: false}}>
         <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Login" component={Login} /> 
+        <Stack.Screen name="Login" component={Login} options={{ title: 'Ingresar', headerShown: true,
+                headerStyle: { backgroundColor: '#f3b91aff' },
+                headerTintColor: '#000',
+                headerTitleStyle: { fontSize: 24, fontFamily: 'Baloo2-Bold' }
+               }}/>   
         <Stack.Screen name="LoginPin" component={LoginPin} /> 
         <Stack.Screen name="RegistroUsuario" component={RegistroUsuario} 
                 options={{ title: 'Registrarse', headerShown: true,
@@ -59,10 +63,13 @@ function App() {
     );
   }
 
-  return (
-    <NavigationContainer> 
-      <MyStack/>
-    </NavigationContainer>
+  return (     
+        <NavigationContainer> 
+          <AuthProvider>
+              <MyStack/>
+          </AuthProvider>
+        </NavigationContainer>
+    
   );
 }
 

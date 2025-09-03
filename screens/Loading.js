@@ -7,7 +7,7 @@ const LoadingScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace("Login"); // Reemplaza con la pantalla de destino
+      navigation.replace("Home"); // Reemplaza con la pantalla de destino
     }, 2000); // Simula carga de 2 segundos
   }, []);
 

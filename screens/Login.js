@@ -1,9 +1,55 @@
-import React, { useState } from 'react'
-import { Text, StyleSheet, View, Image, TextInput, ImageBackground,TouchableOpacity,ScrollView } from 'react-native'
+import React, { useEffect,useState,useContext } from 'react'
+import { Text, StyleSheet, View, Image, TextInput, ImageBackground,TouchableOpacity,ScrollView,Alert } from 'react-native'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from '../utils/AuthContext'; 
 export default function Login({navigation}) {
-  const [showPin, setShowPin] = useState(true); // 👈 controla visibilidad del pin
+  const [showPin, setShowPin] = useState(false); // 👈 controla visibilidad del pin
+  const [nom_usu, setNom_usu] = useState('');
+  const [pin, setPin] = useState('');
+  const { user, login, loading  } = useContext(AuthContext);
+  
+
+  const btnIngresar = async () => {
+      if (!nom_usu || !pin) {
+        Alert.alert('Error', 'Completa todos los campos');
+        return;
+      }
+     
+      try {
+        const response = await fetch('https://15b8c1efe786.ngrok-free.app/api/usuarios/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              nom_usu: nom_usu,        // el valor de tu input nombre
+              pin: pin,             // el valor de tu input pin
+        }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Login exitoso:", data);
+          // ✅ Guardar token/ID en AsyncStorage
+          // Guardar sesión con AuthContext
+          login({ userId: data.userId, token: data.token });
+          Alert.alert(
+            "Éxito",
+            "Bienvenido",
+            [
+              {
+                text: "OK",
+                 onPress: () =>  navigation.replace("Home")
+              },
+            ],
+            { cancelable: false }
+          );
+        } else {
+          Alert.alert("Error", data.message || "Credenciales inválidas ❌");
+        }
+      } catch (error) {
+        console.log("Error en login:", err);
+        Alert.alert("Error", "No se pudo conectar al servidor");
+      }
+    };
     return (
       <ScrollView>
          <ImageBackground
@@ -26,6 +72,8 @@ export default function Login({navigation}) {
               placeholder="Nombre Usuario"
               style={styles.input}
               placeholderTextColor="#999"
+              value={nom_usu}
+              onChangeText={setNom_usu}
             />
             <View style={styles.inputWrapper}>
               <TextInput
@@ -35,6 +83,8 @@ export default function Login({navigation}) {
                 keyboardType="numeric"
                 maxLength={4}
                 placeholderTextColor="#999"
+                value={pin}
+                onChangeText={setPin}
               />
               <TouchableOpacity
             style={styles.iconWrapper}
@@ -48,7 +98,7 @@ export default function Login({navigation}) {
           </TouchableOpacity>
           </View>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity style={styles.button} onPress={btnIngresar}>
               <Text style={styles.buttonText}>Ingresar</Text>
             </TouchableOpacity>
 
