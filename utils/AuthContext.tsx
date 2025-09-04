@@ -3,7 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface User {
   id: string;
-  nom_usu: string;
+  token: string;
+  nom_usu?: string;
+  avatarUrl?: string;
 }
 
 interface AuthContextType {

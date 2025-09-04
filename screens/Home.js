@@ -11,10 +11,20 @@ export default function Home({ navigation }) {
     // Revisar si existe token en AsyncStorage
     useEffect(() => {
       const checkSession = async () => {      
-        setIsLoggedIn(!!user?.userId); // true si hay token
+        setIsLoggedIn(!!user?.id); // true si hay token
       };
       checkSession();
     }, [menuVisible,user]); // cada vez que abra el menú revisa
+
+    const btnComenzar = () => {
+    if (user) {
+      // ✅ Si está logueado → Crear cuento
+      navigation.navigate("CrearCuento");
+    } else {
+      // ❌ Si NO está logueado → Login
+      navigation.navigate("Login");
+    }
+  };
 
     const handleLogout = () => {
     logout();
@@ -57,7 +67,9 @@ export default function Home({ navigation }) {
            {isLoggedIn ? (
             // 🔑 Menú si está logueado
             <>
-              <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
+              <TouchableOpacity onPress={() => {
+                setMenuVisible(false);
+                navigation.navigate("MiPerfil")}}>
                 <Text style={styles.option}>👤 Mi Perfil</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("MisCuentos")}>
@@ -114,7 +126,7 @@ export default function Home({ navigation }) {
                     <TouchableOpacity 
                       activeOpacity={1} // Evita que el botón se opaque al presionarlo
                       style={styles.button} 
-                      onPress={() => {navigation.navigate("CrearCuento");}}>
+                      onPress={btnComenzar}>
                         <Ionicons name="caret-forward-outline" size={20} color="#fff" style={styles.icon} />
                         <Text style={styles.text}>COMENZAR</Text>
                     </TouchableOpacity>

@@ -28,6 +28,7 @@ import LoadingScreen from './screens/Loading';
 import LoadingPag from './screens/LoadingScreen';
 import CrearCuento from './screens/CrearCuento';
 import RegistroUsuario from './screens/RegistroUsuario';
+import MiPerfil from './screens/MiPerfil';
 import { AuthProvider, AuthContext } from './utils/AuthContext';
 function App() {
 
@@ -43,7 +44,12 @@ function App() {
                 headerTintColor: '#000',
                 headerTitleStyle: { fontSize: 24, fontFamily: 'Baloo2-Bold' }
                }}/>   
-        <Stack.Screen name="LoginPin" component={LoginPin} /> 
+        <Stack.Screen name="MiPerfil" component={MiPerfil} 
+                options={{ title: 'Mi Perfil', headerShown: true,
+                headerStyle: { backgroundColor: '#6EE7B7' },
+                headerTintColor: '#000',
+                headerTitleStyle: { fontSize: 24, fontFamily: 'Baloo2-Bold' }
+               }}/>  
         <Stack.Screen name="RegistroUsuario" component={RegistroUsuario} 
                 options={{ title: 'Registrarse', headerShown: true,
                 headerStyle: { backgroundColor: '#6EE7B7' },

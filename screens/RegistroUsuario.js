@@ -9,15 +9,18 @@ const RegistroUsuario = ({navigation}) => {
   const [confirmPin, setConfirmPin] = useState('');
   const [avatars, setAvatars] = useState([]);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
-  // Consumir backend
+ 
   useEffect(() => {
-    fetch("https://15b8c1efe786.ngrok-free.app/api/avatars") // ⚠️ Cambiar localhost por IP de tu PC si usas dispositivo físico
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Respuesta del backend:", data);
-        setAvatars(data);
-      })
-      .catch((err) => console.error(err));
+    const fetchAvatars = async () => {
+      try {
+        const res = await fetch('https://8cd0d2b390b5.ngrok-free.app/api/avatars'); // 👉 aquí va tu endpoint
+        const data = await res.json();
+        setAvatars(data); // debe ser un array [{id, url}, {id, url}, ...]
+      } catch (error) {
+        console.log("Error cargando avatares:", error);
+      }
+    };
+    fetchAvatars();
   }, []);
   
   const handleRegister = async () => {
@@ -35,7 +38,7 @@ const RegistroUsuario = ({navigation}) => {
     }
 
     try {
-      const response = await fetch('https://15b8c1efe786.ngrok-free.app/api/usuarios', {
+      const response = await fetch('https://8cd0d2b390b5.ngrok-free.app/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

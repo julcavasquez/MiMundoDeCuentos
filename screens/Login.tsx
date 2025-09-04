@@ -1,13 +1,15 @@
 import React, { useEffect,useState,useContext } from 'react'
 import { Text, StyleSheet, View, Image, TextInput, ImageBackground,TouchableOpacity,ScrollView,Alert } from 'react-native'
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from '../utils/AuthContext'; 
-export default function Login({navigation}) {
+import { useNavigation } from "@react-navigation/native";
+
+export default function Login() {
   const [showPin, setShowPin] = useState(false); // 👈 controla visibilidad del pin
   const [nom_usu, setNom_usu] = useState('');
   const [pin, setPin] = useState('');
-  const { user, login, loading  } = useContext(AuthContext);
+  const { login } = useContext(AuthContext)!;
+  const navigation = useNavigation<any>();
   
 
   const btnIngresar = async () => {
@@ -17,7 +19,7 @@ export default function Login({navigation}) {
       }
      
       try {
-        const response = await fetch('https://15b8c1efe786.ngrok-free.app/api/usuarios/login', {
+        const response = await fetch('https://8cd0d2b390b5.ngrok-free.app/api/usuarios/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -25,12 +27,13 @@ export default function Login({navigation}) {
               pin: pin,             // el valor de tu input pin
         }),
         });
-        if (response.ok) {
-          const data = await response.json();
+        const data = await response.json();
+        console.log("Login exitoso:", data);
+        if (response.ok) {         
           console.log("Login exitoso:", data);
           // ✅ Guardar token/ID en AsyncStorage
           // Guardar sesión con AuthContext
-          login({ userId: data.userId, token: data.token });
+          login({ id: data.userId, token: data.token });
           Alert.alert(
             "Éxito",
             "Bienvenido",
@@ -46,7 +49,7 @@ export default function Login({navigation}) {
           Alert.alert("Error", data.message || "Credenciales inválidas ❌");
         }
       } catch (error) {
-        console.log("Error en login:", err);
+        console.log("Error en login:", error);
         Alert.alert("Error", "No se pudo conectar al servidor");
       }
     };
